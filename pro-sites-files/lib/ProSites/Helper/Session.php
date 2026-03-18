@@ -164,8 +164,42 @@ if ( ! class_exists( 'ProSites_Helper_Session' ) ) {
 		}
 
 		public static function attempt_force_sessions() {
-			// Activate Sessions by putting in a false var
-			ProSites_Helper_Session::session('psts_sessions_active', true);
+			/**
+			 * Only force sessions when Pro Sites actually needs them.
+			 *
+			 * This avoids setting PHPSESSID and no-cache headers for anonymous
+			 * visitors on unrelated front-end pages, which otherwise defeats
+			 * full-page caching on multisite installs.
+			 */
+
+			// Logged-in users may need sessions for account/subscription actions.
+			if ( is_user_logged_in() ) {
+				ProSites_Helper_Session::session( 'psts_sessions_active', true );
+				return;
+			}
+
+			// Checkout page requires a session for signup/upgrade flows.
+			if ( function_exists( 'psts' ) ) {
+				$checkout_page_id = psts()->get_setting( 'checkout_page' );
+				if ( $checkout_page_id && is_page( $checkout_page_id ) ) {
+					ProSites_Helper_Session::session( 'psts_sessions_active', true );
+					return;
+				}
+			}
+
+			// Gateway submissions may need session state even before login completes.
+			if ( ! empty( $_POST ) && (
+				isset( $_POST['psts_checkout'] ) ||
+				isset( $_POST['stripeToken'] ) ||
+				isset( $_POST['paypal'] ) ||
+				isset( $_POST['psts_manual'] ) ||
+				isset( $_POST['prosites'] )
+			) ) {
+				ProSites_Helper_Session::session( 'psts_sessions_active', true );
+				return;
+			}
+
+			// Anonymous non-checkout requests stay stateless and cache-friendly.
 		}
 
 	}
