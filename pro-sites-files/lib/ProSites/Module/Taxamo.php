@@ -181,7 +181,7 @@ if ( ! class_exists( 'ProSites_Module_Taxamo' ) ) {
 
 				$resp = $taxamo->createTransaction( array( 'transaction' => $t ) );
 				if( isset( $resp ) && isset( $resp->transaction ) && isset( $resp->transaction->key ) ) {
-					$taxamo->confirmTransaction($resp->transaction->key, null);
+					$taxamo->confirmTransaction(null, $resp->transaction->key);
 				}
 
 			}
