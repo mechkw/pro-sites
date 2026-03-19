@@ -57,28 +57,8 @@ class ProSites {
 		//install plugin
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
 
-		//load dashboard notice
-		global $wpmudev_notices;
-		$wpmudev_notices[] = array(
-			'id'      => 49,
-			'name'    => 'Pro Sites',
-			'screens' => array(
-				'toplevel_page_psts-network',
-				'pro-sites_page_psts-stats-network',
-				'pro-sites_page_psts-coupons-network',
-				'pro-sites_page_psts-levels-network',
-				'pro-sites_page_psts-modules-network',
-				'pro-sites_page_psts-plugins-network',
-				'pro-sites_page_psts-themes-network',
-				'pro-sites_page_psts-settings-network',
-				'pro-sites_page_psts-gateways-network',
-				'pro-sites_page_psts-pricing-settings-network',
-			),
-		);
-		
-		if ( file_exists( $this->plugin_dir . 'dash-notice/wpmudev-dash-notification.php' ) ) {
-			include_once( $this->plugin_dir . 'dash-notice/wpmudev-dash-notification.php' );	
-		}
+		// WPMU DEV Dashboard notice intentionally disabled.
+		// This fork no longer relies on WPMU DEV update/support integration.
 
 		// Set global cache group.
 		wp_cache_add_global_groups( array( 'psts', 'blog-details' ) );
