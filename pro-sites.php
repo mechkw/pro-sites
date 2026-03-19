@@ -252,6 +252,7 @@ class ProSites {
 			'ProSites_Gateway_Manual' => 'gateways/gateway-manual.php',
 			'ProSites_Gateway_PayPalExpressPro' => 'gateways/gateway-paypal-express-pro.php',
 			'ProSites_Gateway_Stripe' => 'gateways/gateway-stripe.php',
+			'ProSites_Gateway_Square' => 'gateways/gateway-square.php',
 		);
 		$override_keys = array_keys( $class_overrides );
 

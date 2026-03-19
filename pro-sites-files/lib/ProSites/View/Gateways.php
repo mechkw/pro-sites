@@ -196,6 +196,35 @@ if ( ! class_exists( 'ProSites_View_Gateways' ) ) {
 		}
 
 		/**
+		 * Square
+		 *
+		 * @return string
+		 */
+		public static function render_tab_square() {
+			global $psts;
+
+			ProSites_Helper_Settings::settings_header( ProSites_Helper_Tabs_Gateways::get_active_tab() );
+			$class_name = 'ProSites_Gateway_Square';
+			$active_gateways = (array) $psts->get_setting('gateways_enabled');
+			$checked = in_array( $class_name, $active_gateways ) ? 'on' : 'off';
+
+			?>
+			<table class="form-table">
+				<tr>
+					<th scope="row"><?php _e( 'Enable Gateway', 'psts' ) ?></th>
+					<td>
+						<input type="hidden" name="gateway" value="<?php echo esc_attr( $class_name ); ?>" />
+						<input type="checkbox" name="gateway_active" value="1" <?php checked( $checked, 'on' ); ?> />
+					</td>
+				</tr>
+			</table>
+			<?php
+			$gateway = new ProSites_Gateway_Square();
+			echo $gateway->settings();
+
+		}
+
+		/**
 		 * Manual Payments
 		 *
 		 * @return string

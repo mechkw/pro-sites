@@ -58,6 +58,12 @@ if ( ! class_exists( 'ProSites_Helper_Tabs_Gateways' ) ) {
 						__( 'Stripe makes it easy to start accepting credit cards directly on your site with full PCI compliance', 'psts' ),
 					),
 				) ),
+				'square' => array_merge( $section_options, array(
+					'title' => __( 'Square', 'psts' ),
+					'desc'  => array(
+						__( 'Accept card payments with Square. Sandbox mode is supported for staged testing.', 'psts' ),
+					),
+				) ),
 				'manual' => array_merge( $section_options, array(
 					'title' => __( 'Manual Payments', 'psts' ),
 					'desc'               => array(
