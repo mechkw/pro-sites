@@ -5,6 +5,32 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+FORK MAINTENANCE (Ken Watts / mechkw)
+----------------------------------------------------------------------
+
+Fork baseline and active maintenance started: 2026-03-18
+
+2026-03-19 (mechkw)
+*Added:
+    - Square recurring subscription gateway implementation (initial release) with checkout integration.
+    - Square gateway architecture/implementation plan document (SQUARE-GATEWAY-PLAN.md).
+*Updated:
+    - README.md rewritten for community-maintained fork status, with feature-focused documentation and legacy credit.
+*Fixed:
+    - Checkout page rendering on pretty permalinks by adding non-zero blog-id fallback logic.
+    - PHP 8.x compatibility in bundled Taxamo client method signatures.
+    - PHP 8.x compatibility in bundled csstidy library.
+    - Removed obsolete WPMU DEV dashboard nag/banner integration in wp-admin.
+
+2026-03-18 (mechkw)
+*Fixed:
+    - Session bootstrap behavior to avoid forcing anonymous PHP sessions on every request.
+      This improves cache compatibility by limiting sessions to checkout/payment-relevant flows.
+
+----------------------------------------------------------------------
+LEGACY UPSTREAM CHANGELOG (WPMU DEV / Incsub)
+----------------------------------------------------------------------
+
 3.6.1 - 13/03/2019
 
 *Added:
