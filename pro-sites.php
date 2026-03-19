@@ -148,6 +148,7 @@ class ProSites {
 		add_action( 'admin_notices', array( &$this, 'trial_notice' ), 2 );
 
 		add_action( 'pre_get_posts', array( &$this, 'checkout_page_load' ) );
+		add_filter( 'the_content', array( &$this, 'checkout_content_fallback' ), 999 );
 
 		// Change signup...
 		add_filter( 'register', array( &$this, 'prosites_signup_url' ) );
@@ -1186,10 +1187,27 @@ class ProSites {
 		    $queried_object_id = intval( $page_id );
 		}
 
-		//check if on checkout page or exit
-		if ( ! $this->get_setting( 'checkout_page' ) || $queried_object_id != $this->get_setting( 'checkout_page' ) ) {
-
+		$checkout_page_id = (int) $this->get_setting( 'checkout_page' );
+		if ( ! $checkout_page_id ) {
 			return;
+		}
+
+		// Pretty permalinks can leave queried_object_id empty in pre_get_posts.
+		// Fall back to pagename matching against the configured checkout page slug.
+		if ( $queried_object_id !== $checkout_page_id ) {
+			$checkout_page = get_post( $checkout_page_id );
+			$checkout_slug = ( $checkout_page && ! empty( $checkout_page->post_name ) ) ? $checkout_page->post_name : '';
+			$pagename      = (string) $query->get( 'pagename' );
+			$pagename      = trim( $pagename, '/' );
+			$uri_path      = '';
+			if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
+				$uri_path = trim( (string) parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ), '/' );
+			}
+
+			$slug_matches = ( ! empty( $checkout_slug ) && ( $pagename === $checkout_slug || $uri_path === $checkout_slug ) );
+			if ( ! $slug_matches ) {
+				return;
+			}
 		}
 
 		//force ssl on the checkout page if required by gateway force if admin is forced (because user will be logged in)
@@ -1313,6 +1331,38 @@ class ProSites {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Fallback renderer for checkout content.
+	 *
+	 * Some themes/builders bypass the normal pre_get_posts checkout hook timing,
+	 * leaving the checkout page as plain content. If that happens, initialize
+	 * checkout processing late and render the checkout output here.
+	 *
+	 * @param string $content Existing content.
+	 *
+	 * @return string
+	 */
+	function checkout_content_fallback( $content ) {
+		if ( is_admin() ) {
+			return $content;
+		}
+
+		$checkout_page_id = (int) $this->get_setting( 'checkout_page' );
+		if ( ! $checkout_page_id || ! is_page( $checkout_page_id ) ) {
+			return $content;
+		}
+
+		if ( ! $this->checkout_processed && isset( $GLOBALS['wp_query'] ) ) {
+			$this->checkout_page_load( $GLOBALS['wp_query'] );
+		}
+
+		if ( $this->checkout_processed ) {
+			return $this->checkout_output( $content );
+		}
+
+		return $content;
 	}
 
 	/**
