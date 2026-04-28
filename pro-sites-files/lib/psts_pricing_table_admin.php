@@ -51,9 +51,10 @@ class ProSites_Pricing_Table_Admin extends WP_List_Table {
 				$field = '<span class="' . $column_name . '" data-order="' . $item [ $column_name ] . '">' . $item [ $column_name ] . '</span>';
 				break;
 			case 'psts_co_visible':
-				global $$item ['psts_co_class_name'];
+				$class_name      = $item['psts_co_class_name'];
+				$module_instance = isset( $GLOBALS[ $class_name ] ) && is_object( $GLOBALS[ $class_name ] ) ? $GLOBALS[ $class_name ] : null;
 				//Check if class has some level settings
-				$default_value = ( method_exists( $$item ['psts_co_class_name'], 'required_level' ) && $item ['psts_co_level_id'] >= $$item ['psts_co_class_name']->required_level() ) ? "enabled" : "disabled";
+				$default_value = ( $module_instance && method_exists( $module_instance, 'required_level' ) && $item['psts_co_level_id'] >= $module_instance->required_level() ) ? "enabled" : "disabled";
 
 				$check_value = $psts->get_setting( 'pricing_table_module_' . $item ['psts_co_class_name'] . '_visible' );
 
@@ -200,12 +201,12 @@ class ProSites_Pricing_Table_Admin extends WP_List_Table {
 		$cur_level = intval( $cur_level );
 
 		foreach ( $items as $index => $module ) {
-			global $$module;
+			$module_instance = isset( $GLOBALS[ $module ] ) && is_object( $GLOBALS[ $module ] ) ? $GLOBALS[ $module ] : null;
 			$required_level = '';
 			//Get Level Preference for each module and mark it visible as per settings
 			//Check if class exists and if there is any function t return minimum level
-			if ( class_exists( $module ) && method_exists( $$module, 'required_level' ) ) {
-				$required_level = $$module->required_level();
+			if ( class_exists( $module ) && $module_instance && method_exists( $module_instance, 'required_level' ) ) {
+				$required_level = $module_instance->required_level();
 			}
 			$module_is_visible    = $required_level <= $cur_level ? true : false;
 			$module_label         = $psts->get_setting( 'pricing_table_module_' . $module . '_label' ) ? $psts->get_setting( 'pricing_table_module_' . $module . '_label' ) : $module::$user_label;
@@ -428,9 +429,11 @@ class ProSites_Pricing_Table_Admin extends WP_List_Table {
 
 		//If there is no include text and class is one of the selected class, get the text as per settings
 		if ( empty( $include_text ) && in_array( $class_name, $classes_with_text ) ) {
+			$module_instance = isset( $GLOBALS[ $class_name ] ) && is_object( $GLOBALS[ $class_name ] ) ? $GLOBALS[ $class_name ] : null;
 
-			global $$class_name;
-			$include_text = $$class_name->include_text( $level );
+			if ( $module_instance && method_exists( $module_instance, 'include_text' ) ) {
+				$include_text = $module_instance->include_text( $level );
+			}
 
 		}
 

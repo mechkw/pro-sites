@@ -157,7 +157,7 @@ class ProSites_Gateway_PayPalExpressPro {
 	 *
 	 * @return string|void
 	 */
-	public static function render_gateway( $render_data = array(), $args, $blog_id, $domain, $prefer_cc = true ) {
+	public static function render_gateway( $render_data, $args, $blog_id, $domain, $prefer_cc = true ) {
 
 		global $psts, $current_site;
 		$content   = '';
@@ -1544,7 +1544,7 @@ class ProSites_Gateway_PayPalExpressPro {
 	 * @param $pending_reason
 	 * @param $payerid
 	 */
-	private static function update_pending_reason( $blog_id, $payment_status, $pending_reason = '', $payerid, $pending_profile = '' ) {
+	private static function update_pending_reason( $blog_id, $payment_status, $pending_reason, $payerid, $pending_profile = '' ) {
 		global $psts, $wpdb;
 		$psts->log_action( $blog_id, sprintf( __( 'PayPal response: Last payment is pending (%s). Reason: %s', 'psts' ), $payment_status, $pending_reason ) . '. Payer ID: ' . $payerid );
 
@@ -1919,7 +1919,7 @@ class ProSites_Gateway_PayPalExpressPro {
 	public static function create_transaction_object( $object, $data, $gateway ) {
 
 		global $psts;
-		if ( get_class() !== $gateway ) {
+		if ( __CLASS__ !== $gateway ) {
 			return $object;
 		}
 
@@ -2009,7 +2009,7 @@ class ProSites_Gateway_PayPalExpressPro {
 		$object->tax_percent = $tax_rate;
 		$object->subtotal    = $subtotal;  // optional
 		$object->tax         = ! empty( $data['TAXAMT'] ) ? $data['TAXAMT'] : ( $total_amt - $subtotal ); // optional
-		$object->gateway     = get_class();
+		$object->gateway     = __CLASS__;
 
 		return $object;
 	}
@@ -2302,7 +2302,7 @@ class ProSites_Gateway_PayPalExpressPro {
 	 */
 	function settings_process( $settings, $gateway_class ) {
 
-		if ( get_class() == $gateway_class ) {
+		if ( __CLASS__ == $gateway_class ) {
 			$settings['pypl_enable_pro'] = isset( $settings['pypl_enable_pro'] ) ? $settings['pypl_enable_pro'] : 0;
 		}
 
@@ -3162,7 +3162,7 @@ class ProSites_Gateway_PayPalExpressPro {
 		$data['evidence_string'] = $evidence_str;
 
 		// Get the object
-		$object = ProSites_Helper_Transaction::object_from_data( $data, get_class() );
+		$object = ProSites_Helper_Transaction::object_from_data( $data, __CLASS__ );
 
 		// Record the object
 		ProSites_Helper_Transaction::record( $object );

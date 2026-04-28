@@ -177,7 +177,7 @@ class ProSites_Gateway_Manual {
 		);
 	}
 
-	public static function render_gateway( $render_data = array(), $args, $blog_id, $domain, $prefer_cc = false ) {
+	public static function render_gateway( $render_data, $args, $blog_id, $domain, $prefer_cc = false ) {
 		global $psts;
 		$content = '';
 
@@ -212,7 +212,7 @@ class ProSites_Gateway_Manual {
 		return $content;
 	}
 
-	public static function process_checkout_form( $process_data = array(), $blog_id, $domain ) {
+	public static function process_checkout_form( $process_data, $blog_id, $domain ) {
 		global $psts, $wpdb;
 
 		if ( isset( $_POST['psts_mp_submit'] ) ) {

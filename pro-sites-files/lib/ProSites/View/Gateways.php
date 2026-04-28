@@ -30,7 +30,7 @@ if ( ! class_exists( 'ProSites_View_Gateways' ) ) {
 					'button_name'         => 'gateways',
 				);
 
-				ProSites_Helper_Tabs_Gateways::render( get_class(), $page_header_options, $options );
+				ProSites_Helper_Tabs_Gateways::render( __CLASS__, $page_header_options, $options );
 
 				?>
 

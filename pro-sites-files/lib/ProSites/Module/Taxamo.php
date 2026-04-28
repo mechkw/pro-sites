@@ -31,19 +31,19 @@ if ( ! class_exists( 'ProSites_Module_Taxamo' ) ) {
 				}
 			}
 
-			add_filter( 'prosite_checkout_tax_apply', array( get_class(), 'apply_tax' ), 10, 4 );
-			add_filter( 'prosite_checkout_tax_percentage', array( get_class(), 'tax_percentage' ), 10, 4 );
+			add_filter( 'prosite_checkout_tax_apply', array( __CLASS__, 'apply_tax' ), 10, 4 );
+			add_filter( 'prosite_checkout_tax_percentage', array( __CLASS__, 'tax_percentage' ), 10, 4 );
 
-			add_filter( 'prosites_get_tax_object', array( get_class(), 'get_tax_object' ) );
-			add_filter( 'prosites_get_tax_evidence_string', array( get_class(), 'get_evidence_string' ), 10, 2 );
+			add_filter( 'prosites_get_tax_object', array( __CLASS__, 'get_tax_object' ) );
+			add_filter( 'prosites_get_tax_evidence_string', array( __CLASS__, 'get_evidence_string' ), 10, 2 );
 			add_filter( 'prosites_tax_evidence_from_json_data', array(
-				get_class(),
+				__CLASS__,
 				'get_evidence_from_json_data'
 			), 10, 2 );
-			add_filter( 'prosites_tax_country_from_data', array( get_class(), 'get_country_from_data' ), 10, 3 );
-			add_filter( 'prosites_tax_ip_from_data', array( get_class(), 'get_ip_from_data' ), 10, 3 );
+			add_filter( 'prosites_tax_country_from_data', array( __CLASS__, 'get_country_from_data' ), 10, 3 );
+			add_filter( 'prosites_tax_ip_from_data', array( __CLASS__, 'get_ip_from_data' ), 10, 3 );
 
-			add_action( 'prosites_transaction_record', array( get_class(), 'record_transaction' ) );
+			add_action( 'prosites_transaction_record', array( __CLASS__, 'record_transaction' ) );
 
 		}
 

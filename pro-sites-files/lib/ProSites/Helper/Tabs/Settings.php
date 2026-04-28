@@ -24,11 +24,11 @@ if ( ! class_exists( 'ProSites_Helper_Tabs_Settings' ) ) {
 	class ProSites_Helper_Tabs_Settings extends ProSites_Helper_Tabs {
 
 		public static function render( $callback_parent = 'ProSites_Helper_Tabs', $settings_header = array(), $options = array(), $persistent = array() ) {
-			parent::render_child( get_class(), $callback_parent, $settings_header, $options, $persistent );
+			parent::render_child( __CLASS__, $callback_parent, $settings_header, $options, $persistent );
 		}
 
 		public static function get_active_tab() {
-			return parent::get_active_tab_child( get_class() );
+			return parent::get_active_tab_child( __CLASS__ );
 		}
 
 		public static function get_tabs() {

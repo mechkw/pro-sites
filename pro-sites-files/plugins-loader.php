@@ -97,8 +97,7 @@ class ProSites_PluginLoader {
 			}
 
 			if ( class_exists( $class ) && in_array( $class, $modules_enabled ) ) {
-				global $$class;
-				$$class = new $class;
+				$GLOBALS[ $class ] = new $class;
 			}
 
 		}

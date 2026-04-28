@@ -73,7 +73,7 @@ if ( ! class_exists( 'ProSites_Helper_Tabs' ) ) {
 				if ( method_exists( $callback_parent, $callback_name ) ) {
 					$render_callback = array( $callback_parent, $callback_name );
 				} else {
-					$render_callback = array( get_class(), 'render_generic_tab' );
+					$render_callback = array( __CLASS__, 'render_generic_tab' );
 				}
 				/**
 				 * Allow to plugin external gateways

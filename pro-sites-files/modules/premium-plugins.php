@@ -192,10 +192,10 @@ class ProSites_Module_Plugins {
 		$level_plugins = array();
 
 		foreach ( $psts_plugins as $plugin_file => $data ) {
-			if( empty( $data ) ) {
+			if ( empty( $data ) || ! is_array( $data ) ) {
 				continue;
 			}
-			if ( $data['auto'] && is_numeric( $data['level'] ) && $data['level'] > $old_level && $data['level'] <= $new_level ) {
+			if ( ! empty( $data['auto'] ) && isset( $data['level'] ) && is_numeric( $data['level'] ) && $data['level'] > $old_level && $data['level'] <= $new_level ) {
 				$level_plugins[] = $plugin_file;
 			}
 		}
@@ -224,7 +224,10 @@ class ProSites_Module_Plugins {
 		$override_plugins = (array) get_blog_option( $blog_id, 'psts_plugins' );
 		$level_plugins    = array();
 		foreach ( $psts_plugins as $plugin_file => $data ) {
-			if ( ! in_array( $plugin_file, $override_plugins ) && is_numeric( $data['level'] ) && $data['level'] > $new_level ) {
+			if ( ! is_array( $data ) ) {
+				continue;
+			}
+			if ( ! in_array( $plugin_file, $override_plugins ) && isset( $data['level'] ) && is_numeric( $data['level'] ) && $data['level'] > $new_level ) {
 				$level_plugins[] = $plugin_file;
 			}
 		}
@@ -262,7 +265,10 @@ class ProSites_Module_Plugins {
 		$override_plugins = (array) get_blog_option( $blog_id, 'psts_plugins' );
 		$level_plugins    = array();
 		foreach ( $psts_plugins as $plugin_file => $data ) {
-			if ( ! in_array( $plugin_file, $override_plugins ) && is_numeric( $data['level'] ) && $data['level'] > 0 ) {
+			if ( ! is_array( $data ) ) {
+				continue;
+			}
+			if ( ! in_array( $plugin_file, $override_plugins ) && isset( $data['level'] ) && is_numeric( $data['level'] ) && $data['level'] > 0 ) {
 				$level_plugins[] = $plugin_file;
 			}
 		}
@@ -381,8 +387,8 @@ class ProSites_Module_Plugins {
 
 		//look for valid plugins with anyone access
 		foreach ( $psts_plugins as $plugin_file => $data ) {
-			if( !empty( $data ) ) {
-				if ( $data['auto'] && is_numeric( $data['level'] ) && ( is_pro_site( $blog_id, $data['level'] ) || $data['level'] == 0 ) && ! is_plugin_active( $plugin_file ) ) {
+			if ( ! empty( $data ) && is_array( $data ) ) {
+				if ( ! empty( $data['auto'] ) && isset( $data['level'] ) && is_numeric( $data['level'] ) && ( is_pro_site( $blog_id, $data['level'] ) || $data['level'] == 0 ) && ! is_plugin_active( $plugin_file ) ) {
 					$auto_activate[] = $plugin_file;
 				}
 			}

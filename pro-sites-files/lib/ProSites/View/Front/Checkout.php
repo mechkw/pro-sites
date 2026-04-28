@@ -46,12 +46,12 @@ if ( ! class_exists( 'ProSites_View_Front_Checkout' ) ) {
 			if( 'option2' == $pt_pos  && $plans_table_enabled && $coupons_enabled ) {
 				//If Coupons are enabled and set to show at the bottom OR
 				//If feature column is not enabled, show coupon at the bottom
-				add_filter( 'prosites_inner_pricing_table_post', array( get_class(), 'render_standalone_coupon' ) );
+				add_filter( 'prosites_inner_pricing_table_post', array( __CLASS__, 'render_standalone_coupon' ) );
 			}
 
 			// Add period selector above table based on option
 			if ( 'option2' == $psts->get_setting( 'pricing_table_period_position', 'option1' ) && $plans_table_enabled ) {
-				add_filter( 'prosites_inner_pricing_table_pre', array( get_class(), 'render_standalone_periods' ) );
+				add_filter( 'prosites_inner_pricing_table_pre', array( __CLASS__, 'render_standalone_periods' ) );
 			}
 
 			$session_data = ProSites_Helper_Session::session();

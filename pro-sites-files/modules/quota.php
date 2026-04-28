@@ -24,11 +24,11 @@ class ProSites_Module_Quota {
 	static function run_critical_tasks() {
 		//filter blog and site options
 		if ( ! defined( 'PSTS_QUOTA_ALLOW_OVERRIDE' ) ) {
-			add_filter( 'pre_option_blog_upload_space', array( get_class(), 'filter' ) );
+			add_filter( 'pre_option_blog_upload_space', array( __CLASS__, 'filter' ) );
 		}
-		add_filter( 'pre_site_option_blog_upload_space', array( get_class(), 'filter' ) );
+		add_filter( 'pre_site_option_blog_upload_space', array( __CLASS__, 'filter' ) );
 		add_filter( 'pre_site_option_upload_space_check_disabled', array(
-			get_class(),
+			__CLASS__,
 			'force_network_quota_checkbox'
 		) );
 	}

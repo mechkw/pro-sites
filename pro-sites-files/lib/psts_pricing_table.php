@@ -411,7 +411,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'' . $rgb_col
 			if ( in_array( $class_name, $exclude_class ) ) {
 				continue;
 			}
-			global $$class_name;
+			$module_instance    = isset( $GLOBALS[ $class_name ] ) && is_object( $GLOBALS[ $class_name ] ) ? $GLOBALS[ $class_name ] : null;
 			$module_label       = "";
 			$module_description = "";
 			if ( class_exists( $class_name ) ) {
@@ -437,7 +437,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=\'' . $rgb_col
 				$module_includes = $is_visible = false;
 
 				//Check if class has some level settings
-				$default_value = ( method_exists( $class_name, 'required_level' ) && $level_id >= $$class_name->required_level() ) ? "enabled" : "disabled";
+				$default_value = ( $module_instance && method_exists( $module_instance, 'required_level' ) && $level_id >= $module_instance->required_level() ) ? "enabled" : "disabled";
 
 				//Fetch class settings
 				$is_visible = $psts->get_setting( 'pricing_table_module_' . $class_name . '_visible' );

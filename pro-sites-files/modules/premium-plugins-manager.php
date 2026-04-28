@@ -94,9 +94,9 @@ class ProSites_Module_Plugins_Manager {
 			}
 		}
 
-		foreach( $levels as $level => $value ){
-			$fn_name = 'active_plugins_' . $level;
-			$$fn_name = (array)$psts->get_setting( 'psts_ppm_' . $level );
+		$active_plugins_by_level = array();
+		foreach ( $levels as $level => $value ) {
+			$active_plugins_by_level[ $level ] = (array) $psts->get_setting( 'psts_ppm_' . $level );
 		}
 
 		?>
@@ -131,11 +131,8 @@ class ProSites_Module_Plugins_Manager {
 							?>
 							<tr>
 								<?php foreach( $levels as $level => $value ) { ?>
-								<?php
-									$array = 'active_plugins_' . $level;
-								?>
 								<th class="psts_plugin_manager_level_checkbox">
-									<input <?php echo in_array( $file, ( array ) $$array ) ? 'checked' : '' ?> style="position: relative; top: 5px" type="checkbox" name="psts_ppm[level_<?php echo $level ?>][]" value="<?php echo $file; ?>">
+									<input <?php echo in_array( $file, $active_plugins_by_level[ $level ], true ) ? 'checked' : '' ?> style="position: relative; top: 5px" type="checkbox" name="psts_ppm[level_<?php echo $level ?>][]" value="<?php echo $file; ?>">
 								</th>
 								<?php } ?>
 								<th scope="row"><p><?php echo esc_html($p['Name']); ?></p></th>

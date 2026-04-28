@@ -3,7 +3,7 @@
  * Plugin Name: Pro Sites
  * Plugin URI:  https://github.com/mechkw/pro-sites
  * Description: Community-maintained fork of Pro Sites for WordPress Multisite paid site levels and subscription management.
- * Version:     3.2026.3.20.1
+ * Version:     3.2026.4.28.2
  * Author:      Ken Watts (originally WPMU DEV)
  * Author URI:  https://github.com/mechkw
  * Text Domain: psts
@@ -31,7 +31,7 @@
 
 class ProSites {
 
-	var $version = '3.2026.3.20.1';
+	var $version = '3.2026.4.28.2';
 	var $location;
 	var $language;
 	var $plugin_dir = '';
@@ -40,6 +40,13 @@ class ProSites {
 	var $level = array();
 	var $checkout_processed = false;
 	var $tcpdf = array(); //Array for PDF settings
+	var $countries = array();
+	var $usa_states = array();
+	var $uk_counties = array();
+	var $australian_states = array();
+	var $canadian_provinces = array();
+	var $eu_countries = array();
+	var $currencies = array();
 
 	//setup error var
 	var $errors = '';
@@ -53,6 +60,12 @@ class ProSites {
 
 		//setup our variables
 		$this->init_vars();
+
+		// Load translations before module metadata is registered during bootstrap.
+		// Several module classes call __() in get_name()/get_description() while the
+		// plugin loader is being required below, which otherwise triggers the
+		// WordPress 6.7+ just-in-time textdomain notice for the psts domain.
+		$this->localization();
 
 		//install plugin
 		register_activation_hook( __FILE__, array( $this, 'install' ) );
@@ -105,7 +118,7 @@ class ProSites {
 		}
 
 		//localize
-		add_action( 'plugins_loaded', array( &$this, 'localization' ) );
+		add_action( 'init', array( &$this, 'localization' ), 0 );
 
 		//admin page stuff
 		add_action( 'network_admin_menu', array( &$this, 'plug_network_pages' ) );
@@ -179,7 +192,7 @@ class ProSites {
 		add_action( 'psts_extend', array( $this, 'send_extension_email' ), 10, 7 );
 
 		// New receipt
-		add_action( 'prosites_transaction_record', array( get_class(), 'send_receipt' ) );
+		add_action( 'prosites_transaction_record', array( __CLASS__, 'send_receipt' ) );
 
 		//Check for manual signup, on blog activation
 		add_action('wpmu_activate_blog', array( $this, 'process_manual_signup'), 10, 5 );
@@ -262,6 +275,11 @@ class ProSites {
 	function localization() {
 		// Load up the localization file if we're using WordPress in a different language
 		// Place it in this plugin's "languages" folder and name it "psts-[value in wp-config].mo"
+		$mofile = $this->plugin_dir . 'languages/psts-default.mo';
+		if ( file_exists( $mofile ) ) {
+			load_textdomain( 'psts', $mofile );
+		}
+
 		if ( $this->location == 'plugins' ) {
 			load_plugin_textdomain( 'psts', false, basename( dirname( __FILE__ ) ) . '/pro-sites-files/languages/' );
 		} else if ( $this->location == 'mu-plugins' ) {
@@ -553,7 +571,9 @@ class ProSites {
 		$settings = get_site_option( 'psts_settings' );
 		$setting  = isset( $settings[ $key ] ) ? $settings[ $key ] : $default;
 
-		$setting = !is_array( $setting ) ? trim( $setting ) : $setting;
+		if ( is_string( $setting ) ) {
+			$setting = trim( $setting );
+		}
 		/**
 		 * Filter the specific setting, $key parameter value
 		 *
@@ -2928,15 +2948,9 @@ try{
 
 		//add to footer
 		if ( ! empty( $js ) ) {
-			// @todo remove this soon when we stop supporting PHP 5.2
-			if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
-				$function = "echo '$js';";
-				add_action( 'wp_footer', create_function( '', $function ), 99999 );
-			} else {
-				add_action( 'wp_footer', function() use ( $js ) {
-					echo $js;
-				}, 99999 );
-			}
+			add_action( 'wp_footer', function() use ( $js ) {
+				echo $js;
+			}, 99999 );
 		}
 	}
 
@@ -4173,18 +4187,13 @@ function admin_modules() {
 					<tbody id="plugins"><?php
 					$css  = '';
 					$css2 = '';
-					// @todo Remove this when we stop supporting PHP 5.2.
-					if ( version_compare( PHP_VERSION, '5.4', '<' ) ) {
-						uasort( $psts_modules, create_function( '$a,$b', 'if ($a[0] == $b[0]) return 0;return ($a[0] < $b[0])? -1 : 1;' ) );
-					} else {
-						uasort( $psts_modules, function( $a, $b ) {
-							if ( $a[0] == $b[0] ) {
-								return 0;
-							}
+					uasort( $psts_modules, function( $a, $b ) {
+						if ( $a[0] == $b[0] ) {
+							return 0;
+						}
 
-							return ( $a[0] < $b[0] ) ? -1 : 1;
-						} );
-					}
+						return ( $a[0] < $b[0] ) ? -1 : 1;
+					} );
 
 					$modules_enabled = (array) $this->get_setting( 'modules_enabled' );
 

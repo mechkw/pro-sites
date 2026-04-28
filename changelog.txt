@@ -10,6 +10,19 @@ FORK MAINTENANCE (Ken Watts / mechkw)
 
 Fork baseline and active maintenance started: 2026-03-18
 
+2026-04-28 (mechkw)
+*Updated:
+    - Version bumped to 3.2026.4.28.2 for the PHP 8 compatibility cleanup pass.
+*Fixed:
+    - PHP 8 syntax failures in bundled TCPDF by converting legacy curly-brace string and array offset access.
+    - WordPress 6.7+ early translation loading notice for the psts domain by explicitly loading the bundled textdomain during plugin bootstrap.
+    - PHP 8 deprecations caused by removed create_function() usage, optional parameters declared before required ones, and dynamic variable patterns in plugin/module loading.
+    - Legacy gateway and compatibility code paths by replacing utf8_encode(), guarding get_magic_quotes_gpc(), and tightening null/string handling around plugin settings.
+    - Premium plugin, pricing, gateway, and helper paths that were still depending on older loose assumptions under modern PHP.
+*Validated:
+    - Full Pro Sites PHP tree passes php -l.
+    - Freddie install requests to the front page, signup page, and wp-admin no longer append new Pro Sites notices/deprecations to wp-content/debug.log after deployment.
+
 2026-03-19 (mechkw)
 *Added:
     - Square recurring subscription gateway implementation (initial release) with checkout integration.

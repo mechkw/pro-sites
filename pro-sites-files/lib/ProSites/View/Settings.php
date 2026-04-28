@@ -30,7 +30,7 @@ if ( ! class_exists( 'ProSites_View_Settings' ) ) {
 					'button_name'         => 'settings',
 				);
 
-				ProSites_Helper_Tabs_Settings::render( get_class(), $page_header_options, $options );
+				ProSites_Helper_Tabs_Settings::render( __CLASS__, $page_header_options, $options );
 
 				?>
 

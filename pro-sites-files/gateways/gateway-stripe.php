@@ -394,7 +394,7 @@ class ProSites_Gateway_Stripe {
 	 */
 	public function settings_process( $gateway ) {
 		// If current gateway is Stripe, update the plans.
-		if ( get_class() === $gateway ) {
+		if ( __CLASS__ === $gateway ) {
 			$this->update_plans( get_site_option( 'psts_levels' ) );
 		}
 	}
@@ -1185,7 +1185,7 @@ class ProSites_Gateway_Stripe {
 	 *
 	 * @return string
 	 */
-	public static function render_gateway( $render_data = array(), $args, $blog_id, $domain ) {
+	public static function render_gateway( $render_data, $args, $blog_id, $domain ) {
 		global $psts, $current_user;
 
 		// First we need to clear caches.
@@ -1290,7 +1290,7 @@ class ProSites_Gateway_Stripe {
 	 *
 	 * @return void|bool
 	 */
-	public static function process_checkout_form( $data = array(), $blog_id, $domain ) {
+	public static function process_checkout_form( $data, $blog_id, $domain ) {
 		// First we need to clear caches.
 		ProSites_Helper_Cache::refresh_cache();
 
@@ -1937,7 +1937,7 @@ class ProSites_Gateway_Stripe {
 		// Get the object prepared.
 		$object = ProSites_Helper_Transaction::object_from_data(
 			$object,
-			get_class()
+			__CLASS__
 		);
 
 		// Record the object.
@@ -1961,7 +1961,7 @@ class ProSites_Gateway_Stripe {
 	 */
 	public function create_transaction_object( $object, $data, $gateway ) {
 		// Continue only for Stripe.
-		if ( get_class() !== $gateway || empty( $data ) ) {
+		if ( __CLASS__ !== $gateway || empty( $data ) ) {
 			return $object;
 		}
 
@@ -2036,7 +2036,7 @@ class ProSites_Gateway_Stripe {
 		// We need tax evidence field.
 		$object->evidence = empty( $object->evidence ) ? null : $object->evidence;
 
-		$object->gateway = get_class();
+		$object->gateway = __CLASS__;
 
 		// Set line objects.
 		$object->transaction_lines = $line_objects;

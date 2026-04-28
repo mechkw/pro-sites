@@ -46,7 +46,7 @@ if ( ! class_exists( 'ProSites_View_Pricing' ) ) {
 					'button_name'         => 'pricing',
 				);
 
-				ProSites_Helper_Tabs_Pricing::render( get_class(), $page_header_options, $options );
+				ProSites_Helper_Tabs_Pricing::render( __CLASS__, $page_header_options, $options );
 
 				?>
 

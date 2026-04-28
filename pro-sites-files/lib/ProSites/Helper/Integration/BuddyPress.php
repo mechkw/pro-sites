@@ -7,10 +7,10 @@ if ( ! class_exists( 'ProSites_Helper_Integration_BuddyPress' ) ) {
 		public static function init() {
 
 			// Fix registration
-			add_action( 'init', array( get_class(), 'fix_registration' ) );
+			add_action( 'init', array( __CLASS__, 'fix_registration' ) );
 
 			// BuddyPress Hooks
-			add_action( 'bp_include', array( get_class(), 'buddypress_hooks' ) );
+			add_action( 'bp_include', array( __CLASS__, 'buddypress_hooks' ) );
 
 		}
 
@@ -27,7 +27,7 @@ if ( ! class_exists( 'ProSites_Helper_Integration_BuddyPress' ) ) {
 				remove_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 );
 			}
 
-			add_filter( 'bp_core_get_root_options', array( get_class(), 'remove_site_registration' ) );
+			add_filter( 'bp_core_get_root_options', array( __CLASS__, 'remove_site_registration' ) );
 			//Removed in 3.5.1
 //			add_filter( 'bp_registration_needs_activation', array( $psts, 'disable_user_activation_mail' ), 10 );
 			add_filter( 'bp_core_signup_send_activation_key', array( $psts, 'disable_user_activation_mail' ), 10 );

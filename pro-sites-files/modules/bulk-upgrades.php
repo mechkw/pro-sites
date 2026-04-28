@@ -25,22 +25,22 @@ class ProSites_Module_BulkUpgrades {
 	}
 
 	public static function run_critical_tasks() {
-		add_action( 'admin_menu', array( get_class(), 'plug_page' ), 110 );
+		add_action( 'admin_menu', array( __CLASS__, 'plug_page' ), 110 );
 
 		// Edit profile
-		add_action( 'profile_update', array( get_class(), 'user_profile_update' ) );
-		add_action( 'edit_user_profile', array( get_class(), 'user_profile_fields' ) );
-		add_action( 'show_user_profile', array( get_class(), 'user_profile_fields' ) );
+		add_action( 'profile_update', array( __CLASS__, 'user_profile_update' ) );
+		add_action( 'edit_user_profile', array( __CLASS__, 'user_profile_fields' ) );
+		add_action( 'show_user_profile', array( __CLASS__, 'user_profile_fields' ) );
 
 		//checkout form message
-		add_filter( 'psts_checkout_grid_before_free', array( get_class(), 'checkout_grid_msg' ), 10, 4 );
-		add_filter( 'prosites_myaccount_details', array( get_class(), 'checkout_msg' ), 5, 2 );
-		add_filter( 'prosites_myaccounts_list', array( get_class(), 'checkout_msg' ), 5, 2 );
+		add_filter( 'psts_checkout_grid_before_free', array( __CLASS__, 'checkout_grid_msg' ), 10, 4 );
+		add_filter( 'prosites_myaccount_details', array( __CLASS__, 'checkout_msg' ), 5, 2 );
+		add_filter( 'prosites_myaccounts_list', array( __CLASS__, 'checkout_msg' ), 5, 2 );
 
 		//handle IPN notifications
-		add_action( 'wp_ajax_nopriv_psts_bu_ipn', array( get_class(), 'ipn_handler' ) );
+		add_action( 'wp_ajax_nopriv_psts_bu_ipn', array( __CLASS__, 'ipn_handler' ) );
 
-		add_action( 'admin_bar_menu', array( get_class(), 'add_menu_admin_bar' ), 100 );
+		add_action( 'admin_bar_menu', array( __CLASS__, 'add_menu_admin_bar' ), 100 );
 
 		self::$user_label       = __( 'Bulk Upgrades', 'psts' );
 		self::$user_description = __( 'Can upgrade in bulk packages', 'psts' );
@@ -71,10 +71,10 @@ class ProSites_Module_BulkUpgrades {
 		//add it under the pro blogs menu
 		if ( ! is_main_site() ) {
 			$page = add_submenu_page( 'psts-checkout', __( 'Bulk Upgrades', 'psts' ), __( 'Bulk Upgrades', 'psts' ), 'manage_options', 'psts-bulk-upgrades', array(
-				get_class(),
+				__CLASS__,
 				'bulk_upgrades'
 			) );
-			add_action( 'admin_print_styles-' . $page, array( get_class(), 'admin_css' ) );
+			add_action( 'admin_print_styles-' . $page, array( __CLASS__, 'admin_css' ) );
 		}
 	}
 
@@ -139,7 +139,7 @@ class ProSites_Module_BulkUpgrades {
 
 			$req = 'cmd=_notify-validate';
 			foreach ( $_POST as $k => $v ) {
-				if ( get_magic_quotes_gpc() ) {
+				if ( function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() ) {
 					$v = stripslashes( $v );
 				}
 				$req .= '&' . $k . '=' . urlencode( $v );

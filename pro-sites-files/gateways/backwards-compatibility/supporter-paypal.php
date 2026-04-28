@@ -22,7 +22,7 @@ if ( ( isset( $_POST['payment_status'] ) || isset( $_POST['txn_type'] ) ) && iss
 
 	$req = 'cmd=_notify-validate';
 	foreach ( $_POST as $k => $v ) {
-		if ( get_magic_quotes_gpc() ) {
+		if ( function_exists( 'get_magic_quotes_gpc' ) && get_magic_quotes_gpc() ) {
 			$v = stripslashes( $v );
 		}
 		$req .= '&' . $k . '=' . urlencode( $v );
